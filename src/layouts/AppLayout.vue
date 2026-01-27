@@ -5,6 +5,7 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 
 const isProducts = computed(() => route.path.startsWith("/products"));
+const isOrders = computed(() => route.path.startsWith("/orders"));
 
 const linkClass = (active: boolean) =>
     [
@@ -33,6 +34,13 @@ const linkClass = (active: boolean) =>
                 :class="linkClass(isProducts)"
             >
               Products
+            </router-link>
+
+            <router-link
+                to="/orders"
+                :class="linkClass(isOrders)"
+            >
+              Orders
             </router-link>
 
             <!-- placeholder za kasneje -->
