@@ -19,7 +19,7 @@ onMounted(async () => {
 <template>
   <div class="flex items-end justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-semibold">Orders</h1>
+      <h1 class="text-2xl font-semibold">Orderss</h1>
       <p class="text-sm text-zinc-500">Check all orders</p>
     </div>
 
