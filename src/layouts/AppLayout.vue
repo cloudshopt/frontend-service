@@ -23,7 +23,7 @@ const linkClass = (active: boolean) =>
             <div class="h-9 w-9 rounded-xl bg-zinc-900"></div>
             <div class="leading-tight">
               <div class="font-semibold">CloudShopt</div>
-              <div class="text-xs text-zinc-500">Storefront11213</div>
+              <div class="text-xs text-zinc-500">Storefront</div>
             </div>
           </router-link>
 
