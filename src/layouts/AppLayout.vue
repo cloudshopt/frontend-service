@@ -6,6 +6,7 @@ const route = useRoute();
 
 const isProducts = computed(() => route.path.startsWith("/products"));
 const isOrders = computed(() => route.path.startsWith("/orders"));
+const isPayments = computed(() => route.path.startsWith("/payments"));
 
 const linkClass = (active: boolean) =>
     [
@@ -41,6 +42,13 @@ const linkClass = (active: boolean) =>
                 :class="linkClass(isOrders)"
             >
               Orders
+            </router-link>
+
+            <router-link
+                to="/payments"
+                :class="linkClass(isPayments)"
+            >
+              Payments
             </router-link>
 
             <!-- placeholder za kasneje -->
