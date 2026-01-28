@@ -1,21 +1,44 @@
+// src/router.ts
 import { createRouter, createWebHistory } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
 
-import ProductsPage from "./pages/ProductsPage.vue";
-import ProductDetailPage from "./pages/ProductDetailPage.vue";
-import NotFoundPage from "./pages/NotFoundPage.vue";
-import OrdersPage from "./pages/OrdersPage.vue";
-import PaymentsPage from "./pages/PaymentsPage.vue";
+import ProductsView from "@/views/ProductsView.vue";
+import ProductDetailView from "@/views/ProductDetailView.vue";
+import LoginView from "@/views/LoginView.vue";
+import RegisterView from "@/views/RegisterView.vue";
+import CartView from "@/views/CartView.vue";
+import OrdersView from "@/views/OrdersView.vue";
+import OrderDetailView from "@/views/OrderDetailView.vue";
+import CheckoutSuccessView from "@/views/CheckoutSuccessView.vue";
+import CheckoutCancelView from "@/views/CheckoutCancelView.vue";
 
 const router = createRouter({
     history: createWebHistory(),
     routes: [
         { path: "/", redirect: "/products" },
-        { path: "/products", component: ProductsPage },
-        { path: "/products/:id", component: ProductDetailPage, props: true },
-        { path: "/orders", component: OrdersPage },
-        { path: "/payments", component: PaymentsPage },
-        { path: "/:pathMatch(.*)*", component: NotFoundPage }
+
+        { path: "/login", component: LoginView },
+        { path: "/register", component: RegisterView },
+
+        { path: "/products", component: ProductsView },
+        { path: "/products/:id", component: ProductDetailView },
+
+        { path: "/cart", component: CartView, meta: { auth: true } },
+        { path: "/orders", component: OrdersView, meta: { auth: true } },
+        { path: "/orders/:id", component: OrderDetailView, meta: { auth: true } },
     ],
+});
+
+router.beforeEach(async (to) => {
+    const auth = useAuthStore();
+
+    // ob refreshu: če je token, poskusi fetchMe enkrat
+    if (auth.token && !auth.user) await auth.fetchMe();
+
+    if (to.meta.auth && !auth.token) {
+        return { path: "/login", query: { next: to.fullPath } };
+    }
+    return true;
 });
 
 export default router;
