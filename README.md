@@ -1,14 +1,4 @@
-# Vue 3 + Vite
-
-## Helm deploy
-
-```
-helm upgrade --install frontend-service ./helm/frontend-service \
--n cloudshopt \ 
--f helm/frontend-service/values.yaml
-```
-
-## Test stripe checkout locally 
-```
-stripe listen --forward-to http://app.localhost/api/payments/webhooks/strip
-```
+## frontend-service
+- **Purpose:** UI (Vue + Vite) for browsing products, cart, orders, and checkout redirect to Stripe.
+- **Public URL:** `/`
+- **Calls:** user-service (auth), product-service (catalog), order-service (cart/orders), payment-service (checkout-session)
