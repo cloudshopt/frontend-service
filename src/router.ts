@@ -26,6 +26,9 @@ const router = createRouter({
         { path: "/cart", component: CartView, meta: { auth: true } },
         { path: "/orders", component: OrdersView, meta: { auth: true } },
         { path: "/orders/:id", component: OrderDetailView, meta: { auth: true } },
+
+        { path: "/checkout/success", component: CheckoutSuccessView, meta: { auth: true } },
+        { path: "/checkout/cancel", component: CheckoutCancelView, meta: { auth: true } },
     ],
 });
 

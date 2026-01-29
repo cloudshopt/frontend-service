@@ -1,4 +1,3 @@
-// src/stores/auth.ts
 import { defineStore } from "pinia";
 import { apiGet, apiPost, getToken, setToken } from "@/lib/api";
 
