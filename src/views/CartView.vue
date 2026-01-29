@@ -38,6 +38,7 @@
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useCartStore } from "@/stores/cart";
+import { apiPost } from "@/lib/api";
 
 const cart = useCartStore();
 const router = useRouter();
@@ -77,12 +78,19 @@ async function remove(itemId: number) {
 async function createOrder() {
   error.value = "";
   msg.value = "";
+
   try {
     const order = await cart.createOrderFromCart();
-    msg.value = `Order created (#${order.id}).`;
-    router.push(`/orders/${order.id}`);
+
+    const r = await apiPost<{ url: string }>(
+        "/payments/checkout-session",
+        { order_id: order.id },
+        true
+    );
+
+    window.location.href = r.url;
   } catch (e: any) {
-    error.value = e?.message ?? "Failed to create order";
+    error.value = e?.message ?? "Failed to create order / start payment";
   }
 }
 </script>

@@ -1,4 +1,3 @@
-// src/lib/api.ts
 const API_BASE = import.meta.env.VITE_API_BASE ?? "/api";
 const TOKEN_KEY = "cloudshopt_token";
 
