@@ -30,7 +30,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { RouterLink, useRouter } from "vue-router";
-import { apiGet } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth";
 import { useCartStore } from "@/stores/cart";
 
@@ -48,10 +47,42 @@ function formatPrice(price: number) {
   return PRICE_IS_CENTS ? `€${(price / 100).toFixed(2)}` : `€${price}`;
 }
 
+type GraphQLResponse<T> = { data?: T; errors?: Array<{ message: string }> };
+
+async function gql<T>(query: string, variables?: Record<string, any>) {
+  const res = await fetch("/api/products/graphql", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query, variables }),
+  });
+
+  const json = (await res.json()) as GraphQLResponse<T>;
+
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  if (json.errors?.length) {
+    throw new Error(json.errors.map((e) => e.message).join("; "));
+  }
+  if (!json.data) {
+    throw new Error("No data returned from GraphQL");
+  }
+  return json.data;
+}
+
 onMounted(async () => {
   try {
-    const r = await apiGet<{ data: Product[] }>("/products/items", false);
-    products.value = r.data;
+    const data = await gql<{ products: Product[] }>(
+        `query {
+        products {
+          id
+          name
+          price
+          description
+        }
+      }`
+    );
+    products.value = data.products;
   } catch (e: any) {
     error.value = e?.message ?? "Failed to load products";
   }
