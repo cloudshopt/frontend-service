@@ -11,6 +11,14 @@
       </div>
     </div>
 
+    <button
+        v-if="order.status === 'paid'"
+        class="px-4 py-2 mr-4 rounded bg-indigo-600 hover:bg-indigo-500"
+        @click="onDownloadInvoice(order.id)"
+    >
+      Download invoice (PDF)
+    </button>
+
     <RouterLink to="/orders" class="inline-block mt-6 px-4 py-2 rounded bg-zinc-800 hover:bg-zinc-700">
       Back to orders
     </RouterLink>
@@ -23,6 +31,8 @@
 import { ref, onMounted } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 import { apiGet } from "@/lib/api";
+import { downloadInvoicePdf } from "@/utils/downloadInvoice";
+import { useAuthStore } from "@/stores/auth";
 
 type OrderItem = {
   id: number;
@@ -50,5 +60,16 @@ onMounted(async () => {
     error.value = e?.message ?? "Failed to load order";
   }
 });
+
+
+const auth = useAuthStore();
+
+async function onDownloadInvoice(orderId: number) {
+  try {
+    await downloadInvoicePdf(orderId, auth.token);
+  } catch (e: any) {
+    alert(e?.message ?? "Invoice download failed");
+  }
+}
 
 </script>
